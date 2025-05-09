@@ -21,21 +21,24 @@ app.post('/translate', async (req, res) => {
   if (mode === 'text-to-emoji') {
     prompt = `Convert this sentence into a fun and expressive emoji-only version:\n"${text}"`;
   } else {
-    prompt = `Translate this emoji message into natural English:\n"${text}"`;
+    prompt = `Interpret and explain this emoji message:\n"${text}"`;
   }
 
   try {
-    const response = await openai.createChatCompletion({
-      model: 'gpt-3.5-turbo',
-      messages: [{ role: 'user', content: prompt }],
+    const response = await openai.createCompletion({
+      model: "text-davinci-003",
+      prompt,
+      max_tokens: 60,
     });
 
-    const result = response.data.choices[0].message.content.trim();
-    res.json({ result });
+    res.json({ result: response.data.choices[0].text.trim() });
+
   } catch (error) {
     console.error("❌ OpenAI API error:", error.response?.data || error.message || error);
     res.json({ result: null });
   }
+});
+
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
