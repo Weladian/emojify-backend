@@ -33,10 +33,9 @@ app.post('/translate', async (req, res) => {
     const result = response.data.choices[0].message.content.trim();
     res.json({ result });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Translation failed.' });
+    console.error("❌ OpenAI API error:", error.response?.data || error.message || error);
+    res.json({ result: null });
   }
-});
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
