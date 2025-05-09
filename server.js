@@ -25,13 +25,15 @@ app.post('/translate', async (req, res) => {
   }
 
   try {
-    const response = await openai.createCompletion({
-      model: "text-davinci-003",
-      prompt,
-      max_tokens: 60,
-    });
+    const response = await openai.createChatCompletion({
+  model: "gpt-3.5-turbo",
+  messages: [
+    { role: "system", content: "You are an emoji translator." },
+    { role: "user", content: prompt }
+  ],
+});
+res.json({ result: response.data.choices[0].message.content.trim() });
 
-    res.json({ result: response.data.choices[0].text.trim() });
 
   } catch (error) {
     console.error("❌ OpenAI API error:", JSON.stringify(error.response?.data || error.message || error, null, 2));
