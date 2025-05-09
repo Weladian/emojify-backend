@@ -34,7 +34,7 @@ app.post('/translate', async (req, res) => {
     res.json({ result: response.data.choices[0].text.trim() });
 
   } catch (error) {
-    console.error("❌ OpenAI API error:", error.response?.data || error.message || error);
+    console.error("❌ OpenAI API error:", JSON.stringify(error.response?.data || error.message || error, null, 2));
     res.json({ result: null });
   }
 });
